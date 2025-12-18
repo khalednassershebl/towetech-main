@@ -1,0 +1,17 @@
+
+.dark-mode {
+    --main-color: #{$mainDarkColor};
+    --body-bg: #{$bodyBgDark};
+
+    --navbar-bg: #{$navbarBgDark};
+    --icon-active: #{$iconActiveDark};
+    --icon-idle: #{$iconIdle};
+    --p-color: #{$pDark};
+    --subp-color: #{$subPDark};
+    --link-color: #{$link};
+    --a-light: #{$aLight};
+    --shadow-color: #{$shadowDark};
+    --border-color: #{$borderDark};
+    --sub-light: #{$subDark};
+    --border-input: #{$borderInputDark};
+}

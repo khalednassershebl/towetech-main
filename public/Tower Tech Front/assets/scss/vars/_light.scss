@@ -1,0 +1,17 @@
+
+:root {
+    --main-color: #{$mainColor};
+    --body-bg: #{$bodyBg};
+
+    --navbar-bg: #{$navbarBg};
+    --icon-active: #{$iconActive};
+    --icon-idle: #{$iconIdle};
+    --p-color: #{$p};
+    --subp-color: #{$subP};
+    --link-color: #{$link};
+    --a-light: #{$aLight};
+    --shadow-color: #{$shadow};
+    --border-color: #{$border};
+    --sub-light: #{$subLight};
+    --border-input: #{$borderInput};
+}

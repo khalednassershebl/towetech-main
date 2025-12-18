@@ -1,0 +1,5 @@
+1. Hero Section
+2. Services
+3. About Us
+4. Contacts
+5. Footer
