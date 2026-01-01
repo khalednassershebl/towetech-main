@@ -29,7 +29,7 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:20480'],
         ]);
 
         // Update name and email
@@ -43,13 +43,19 @@ class ProfileController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+            try {
+                // Delete old image if exists
+                if ($user->image) {
+                    Storage::disk('public')->delete($user->image);
+                }
+                // Store new image
+                $path = $request->file('image')->store('users', 'public');
+                $user->image = $path;
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            // Store new image
-            $path = $request->file('image')->store('users', 'public');
-            $user->image = $path;
         }
 
         $user->save();

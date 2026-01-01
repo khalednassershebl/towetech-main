@@ -31,7 +31,7 @@ class HeroSlideController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'subtitle_ar' => 'nullable|string',
@@ -42,7 +42,13 @@ class HeroSlideController extends Controller
         ]);
 
         if ($request->hasFile('background_image')) {
-            $validated['background_image'] = $request->file('background_image')->store('hero-slides', 'public');
+            try {
+                $validated['background_image'] = $request->file('background_image')->store('hero-slides', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['background_image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
+            }
         }
 
         $validated['order'] = $validated['order'] ?? HeroSlide::max('order') + 1;
@@ -78,7 +84,7 @@ class HeroSlideController extends Controller
         $heroSlide = HeroSlide::findOrFail($id);
 
         $validated = $request->validate([
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'subtitle_ar' => 'nullable|string',
@@ -96,11 +102,17 @@ class HeroSlideController extends Controller
             }
             $validated['background_image'] = null;
         } elseif ($request->hasFile('background_image')) {
-            // Delete old image if exists
-            if ($heroSlide->background_image) {
-                Storage::disk('public')->delete($heroSlide->background_image);
+            try {
+                // Delete old image if exists
+                if ($heroSlide->background_image) {
+                    Storage::disk('public')->delete($heroSlide->background_image);
+                }
+                $validated['background_image'] = $request->file('background_image')->store('hero-slides', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['background_image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            $validated['background_image'] = $request->file('background_image')->store('hero-slides', 'public');
         } else {
             // Keep existing image
             $validated['background_image'] = $heroSlide->background_image;

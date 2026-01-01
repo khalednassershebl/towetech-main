@@ -315,13 +315,13 @@
             <div class="form-group">
                 <label for="background">صورة الخلفية</label>
                 <input type="file" id="background" name="background" accept="image/*" onchange="previewNewImage(this)">
-                <small>الصيغ المدعومة: JPEG, PNG, JPG, GIF (الحد الأقصى: 2MB)</small>
+                <small>الصيغ المدعومة: JPEG, PNG, JPG, GIF, WEBP (الحد الأقصى: 20MB)</small>
                 <input type="hidden" id="delete_image" name="delete_image" value="0">
-                @if($slider->background)
+                @if($slider->background_url)
                     <div id="current-image-container" class="current-image">
                         <p>الصورة الحالية:</p>
                         <div class="image-preview-wrapper">
-                            <img id="current-image" src="{{ asset('storage/' . $slider->background) }}" alt="Current background">
+                            <img id="current-image" src="{{ $slider->background_url }}" alt="Current background" onerror="this.src='{{ asset('Tower Tech Front/assets/images/placeholder.png') }}';">
                             <div class="image-actions">
                                 <button type="button" class="btn-image-action btn-view" onclick="viewCurrentImageFullscreen()">عرض</button>
                                 <button type="button" class="btn-image-action btn-replace" onclick="triggerFileInput()">استبدال</button>
@@ -410,7 +410,7 @@
 
 @push('scripts')
 <script>
-    const currentImageUrl = @if($slider->background) "{{ asset('storage/' . $slider->background) }}" @else null @endif;
+    const currentImageUrl = @if($slider->background_url) "{{ $slider->background_url }}" @else null @endif;
 
     function previewNewImage(input) {
         const previewContainer = document.getElementById('image-preview-container');

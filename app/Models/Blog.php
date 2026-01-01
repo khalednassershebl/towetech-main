@@ -26,5 +26,25 @@ class Blog extends Model
         'order' => 'integer',
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get the image URL
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->image)) {
+            return asset('storage/' . ltrim($this->image, '/'));
+        }
+
+        return null;
+    }
 }
 

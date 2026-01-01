@@ -93,9 +93,9 @@ class SettingController extends Controller
             'service_links.*.title_ar' => 'nullable|string|max:255',
             'service_links.*.title_en' => 'nullable|string|max:255',
             'service_links.*.link' => 'nullable|url|max:255',
-            'navbar_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
-            'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
-            'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,ico|max:1024',
+            'navbar_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:20480',
+            'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:20480',
+            'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,ico|max:20480',
             'footer_about_ar' => 'nullable|string',
             'footer_about_en' => 'nullable|string',
             'seo_meta_title_ar' => 'nullable|string|max:255',
@@ -140,30 +140,48 @@ class SettingController extends Controller
 
         // Logos
         if ($request->hasFile('navbar_logo')) {
-            $oldLogo = Setting::getValue('navbar_logo');
-            if ($oldLogo) {
-                Storage::disk('public')->delete($oldLogo);
+            try {
+                $oldLogo = Setting::getValue('navbar_logo');
+                if ($oldLogo) {
+                    Storage::disk('public')->delete($oldLogo);
+                }
+                $path = $request->file('navbar_logo')->store('settings', 'public');
+                Setting::setValue('navbar_logo', $path, 'file', 'logos', 'شعار شريط التنقل', 'Navbar Logo');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['navbar_logo' => 'حدث خطأ أثناء رفع شعار شريط التنقل: ' . $e->getMessage()]);
             }
-            $path = $request->file('navbar_logo')->store('settings', 'public');
-            Setting::setValue('navbar_logo', $path, 'file', 'logos', 'شعار شريط التنقل', 'Navbar Logo');
         }
 
         if ($request->hasFile('footer_logo')) {
-            $oldLogo = Setting::getValue('footer_logo');
-            if ($oldLogo) {
-                Storage::disk('public')->delete($oldLogo);
+            try {
+                $oldLogo = Setting::getValue('footer_logo');
+                if ($oldLogo) {
+                    Storage::disk('public')->delete($oldLogo);
+                }
+                $path = $request->file('footer_logo')->store('settings', 'public');
+                Setting::setValue('footer_logo', $path, 'file', 'logos', 'شعار التذييل', 'Footer Logo');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['footer_logo' => 'حدث خطأ أثناء رفع شعار التذييل: ' . $e->getMessage()]);
             }
-            $path = $request->file('footer_logo')->store('settings', 'public');
-            Setting::setValue('footer_logo', $path, 'file', 'logos', 'شعار التذييل', 'Footer Logo');
         }
 
         if ($request->hasFile('favicon')) {
-            $oldFavicon = Setting::getValue('favicon');
-            if ($oldFavicon) {
-                Storage::disk('public')->delete($oldFavicon);
+            try {
+                $oldFavicon = Setting::getValue('favicon');
+                if ($oldFavicon) {
+                    Storage::disk('public')->delete($oldFavicon);
+                }
+                $path = $request->file('favicon')->store('settings', 'public');
+                Setting::setValue('favicon', $path, 'file', 'logos', 'أيقونة الموقع', 'Favicon');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['favicon' => 'حدث خطأ أثناء رفع الأيقونة: ' . $e->getMessage()]);
             }
-            $path = $request->file('favicon')->store('settings', 'public');
-            Setting::setValue('favicon', $path, 'file', 'logos', 'أيقونة الموقع', 'Favicon');
         }
 
         // Footer About

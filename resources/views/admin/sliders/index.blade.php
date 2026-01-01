@@ -181,8 +181,9 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    @if($slider->background)
-                                        <img src="{{ asset('storage/' . $slider->background) }}" alt="Slider" class="img-preview">
+                                    @if($slider->background_url)
+                                        <img src="{{ $slider->background_url }}" alt="Slider" class="img-preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                        <span style="color: #9ca3af; display: none;">خطأ في تحميل الصورة</span>
                                     @else
                                         <span style="color: #9ca3af;">لا توجد صورة</span>
                                     @endif

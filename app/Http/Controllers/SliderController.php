@@ -31,7 +31,7 @@ class SliderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'description_ar' => 'nullable|string',
@@ -40,7 +40,14 @@ class SliderController extends Controller
         ]);
 
         if ($request->hasFile('background')) {
-            $validated['background'] = $request->file('background')->store('sliders', 'public');
+            try {
+                $imagePath = $request->file('background')->store('sliders', 'public');
+                $validated['background'] = $imagePath;
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['background' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
+            }
         }
 
         Slider::create($validated);
@@ -73,7 +80,7 @@ class SliderController extends Controller
         $slider = Slider::findOrFail($id);
 
         $validated = $request->validate([
-            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'description_ar' => 'nullable|string',
@@ -89,11 +96,18 @@ class SliderController extends Controller
             }
             $validated['background'] = null;
         } elseif ($request->hasFile('background')) {
-            // Delete old image if exists
-            if ($slider->background) {
-                Storage::disk('public')->delete($slider->background);
+            try {
+                // Delete old image if exists
+                if ($slider->background) {
+                    Storage::disk('public')->delete($slider->background);
+                }
+                $imagePath = $request->file('background')->store('sliders', 'public');
+                $validated['background'] = $imagePath;
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['background' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            $validated['background'] = $request->file('background')->store('sliders', 'public');
         } else {
             // Keep existing image
             $validated['background'] = $slider->background;

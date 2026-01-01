@@ -35,14 +35,20 @@ class ServiceController extends Controller
             'title_en' => 'required|string|max:255',
             'description_ar' => 'required|string',
             'description_en' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'link' => 'nullable|url|max:255',
             'order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('services', 'public');
+            try {
+                $validated['image'] = $request->file('image')->store('services', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
+            }
         }
 
         $validated['is_active'] = $request->has('is_active') ? true : false;
@@ -82,7 +88,7 @@ class ServiceController extends Controller
             'title_en' => 'required|string|max:255',
             'description_ar' => 'required|string',
             'description_en' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'link' => 'nullable|url|max:255',
             'order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
@@ -96,11 +102,17 @@ class ServiceController extends Controller
             }
             $validated['image'] = null;
         } elseif ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($service->image) {
-                Storage::disk('public')->delete($service->image);
+            try {
+                // Delete old image if exists
+                if ($service->image) {
+                    Storage::disk('public')->delete($service->image);
+                }
+                $validated['image'] = $request->file('image')->store('services', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            $validated['image'] = $request->file('image')->store('services', 'public');
         } else {
             // Keep existing image
             $validated['image'] = $service->image;

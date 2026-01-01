@@ -36,7 +36,7 @@ class AboutController extends Controller
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'experience_years' => 'required|integer|min:0',
-            'experience_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'experience_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'experience_description_ar' => 'nullable|string',
             'experience_description_en' => 'nullable|string',
             'content_ar' => 'required|string',
@@ -45,17 +45,29 @@ class AboutController extends Controller
             'features_ar.*' => 'string|max:255',
             'features_en' => 'nullable|array',
             'features_en.*' => 'string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
         ]);
 
         // Handle experience image upload
         if ($request->hasFile('experience_image')) {
-            $validated['experience_image'] = $request->file('experience_image')->store('abouts', 'public');
+            try {
+                $validated['experience_image'] = $request->file('experience_image')->store('abouts', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['experience_image' => 'حدث خطأ أثناء رفع صورة الخبرة: ' . $e->getMessage()]);
+            }
         }
 
         // Handle main image upload
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('abouts', 'public');
+            try {
+                $validated['image'] = $request->file('image')->store('abouts', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
+            }
         }
 
         About::create($validated);
@@ -93,7 +105,7 @@ class AboutController extends Controller
             'title_ar' => 'required|string|max:255',
             'title_en' => 'required|string|max:255',
             'experience_years' => 'required|integer|min:0',
-            'experience_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'experience_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'experience_description_ar' => 'nullable|string',
             'experience_description_en' => 'nullable|string',
             'content_ar' => 'required|string',
@@ -102,7 +114,7 @@ class AboutController extends Controller
             'features_ar.*' => 'string|max:255',
             'features_en' => 'nullable|array',
             'features_en.*' => 'string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'delete_experience_image' => 'nullable|boolean',
             'delete_image' => 'nullable|boolean',
         ]);
@@ -114,11 +126,17 @@ class AboutController extends Controller
             }
             $validated['experience_image'] = null;
         } elseif ($request->hasFile('experience_image')) {
-            // Delete old image if exists
-            if ($about->experience_image) {
-                Storage::disk('public')->delete($about->experience_image);
+            try {
+                // Delete old image if exists
+                if ($about->experience_image) {
+                    Storage::disk('public')->delete($about->experience_image);
+                }
+                $validated['experience_image'] = $request->file('experience_image')->store('abouts', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['experience_image' => 'حدث خطأ أثناء رفع صورة الخبرة: ' . $e->getMessage()]);
             }
-            $validated['experience_image'] = $request->file('experience_image')->store('abouts', 'public');
         } else {
             // Keep existing image
             $validated['experience_image'] = $about->experience_image;
@@ -131,11 +149,17 @@ class AboutController extends Controller
             }
             $validated['image'] = null;
         } elseif ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($about->image) {
-                Storage::disk('public')->delete($about->image);
+            try {
+                // Delete old image if exists
+                if ($about->image) {
+                    Storage::disk('public')->delete($about->image);
+                }
+                $validated['image'] = $request->file('image')->store('abouts', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            $validated['image'] = $request->file('image')->store('abouts', 'public');
         } else {
             // Keep existing image
             $validated['image'] = $about->image;

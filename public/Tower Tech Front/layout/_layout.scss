@@ -2003,6 +2003,382 @@ footer {
     }
 }
 
+/* Instagram Popup Styles */
+.instagram-float {
+  position: fixed;
+  bottom: 20px;
+  right: 90px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(225, 48, 108, 0.4);
+  transition: all 0.3s ease;
+  animation: instagramPulse 2s infinite;
+}
+
+.instagram-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(225, 48, 108, 0.6);
+}
+
+.instagram-float svg {
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+@keyframes instagramPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(225, 48, 108, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(225, 48, 108, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(225, 48, 108, 0);
+  }
+}
+
+.instagram-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 90px;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.instagram-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.instagram-popup-content {
+  padding: 0;
+}
+
+.instagram-popup-header {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  padding: 15px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.instagram-popup-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 10px;
+  background: white;
+  padding: 2px;
+}
+
+.instagram-popup-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.instagram-popup-info {
+  flex: 1;
+  color: white;
+}
+
+.instagram-popup-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.instagram-popup-info span {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.instagram-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.instagram-popup-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.instagram-popup-message {
+  padding: 15px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.instagram-popup-message p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.instagram-popup-actions {
+  padding: 15px;
+}
+
+.instagram-popup-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  gap: 8px;
+}
+
+.instagram-popup-btn:hover {
+  background: linear-gradient(45deg, #bc1888 0%, #cc2366 25%, #dc2743 50%, #e6683c 75%, #f09433 100%);
+  color: white;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.instagram-popup-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Facebook Popup Styles */
+.facebook-float {
+  position: fixed;
+  bottom: 20px;
+  right: 160px;
+  width: 60px;
+  height: 60px;
+  background: #1877F2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(24, 119, 242, 0.4);
+  transition: all 0.3s ease;
+  animation: facebookPulse 2s infinite;
+}
+
+.facebook-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(24, 119, 242, 0.6);
+}
+
+.facebook-float svg {
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+@keyframes facebookPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(24, 119, 242, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 119, 242, 0);
+  }
+}
+
+.facebook-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 160px;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.facebook-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.facebook-popup-content {
+  padding: 0;
+}
+
+.facebook-popup-header {
+  background: #1877F2;
+  padding: 15px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.facebook-popup-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 10px;
+  background: white;
+  padding: 2px;
+}
+
+.facebook-popup-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.facebook-popup-info {
+  flex: 1;
+  color: white;
+}
+
+.facebook-popup-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.facebook-popup-info span {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.facebook-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.facebook-popup-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.facebook-popup-message {
+  padding: 15px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.facebook-popup-message p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.facebook-popup-actions {
+  padding: 15px;
+}
+
+.facebook-popup-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1877F2;
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  gap: 8px;
+}
+
+.facebook-popup-btn:hover {
+  background: #166FE5;
+  color: white;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.facebook-popup-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile Responsive for Instagram and Facebook */
+@media (max-width: 768px) {
+  .instagram-popup,
+  .facebook-popup {
+    width: 280px;
+    right: 10px;
+    bottom: 80px;
+  }
+  
+  .instagram-float,
+  .facebook-float {
+    width: 55px;
+    height: 55px;
+    bottom: 15px;
+  }
+  
+  .instagram-float {
+    right: 80px;
+  }
+  
+  .facebook-float {
+    right: 145px;
+  }
+  
+  .instagram-float svg,
+  .facebook-float svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .instagram-popup,
+  .facebook-popup {
+    width: calc(100vw - 20px);
+    right: 10px;
+    left: 10px;
+  }
+}
+
 [lang="en"] {
     .big-nav {
         direction: ltr;

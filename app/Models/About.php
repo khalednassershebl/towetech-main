@@ -29,5 +29,45 @@ class About extends Model
         'features_ar' => 'array',
         'features_en' => 'array',
     ];
+
+    /**
+     * Get the experience image URL
+     */
+    public function getExperienceImageUrlAttribute()
+    {
+        if (!$this->experience_image) {
+            return null;
+        }
+
+        if (filter_var($this->experience_image, FILTER_VALIDATE_URL)) {
+            return $this->experience_image;
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->experience_image)) {
+            return asset('storage/' . ltrim($this->experience_image, '/'));
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the main image URL
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->image)) {
+            return asset('storage/' . ltrim($this->image, '/'));
+        }
+
+        return null;
+    }
 }
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 use App\Models\Slider;
 use App\Models\Partner;
 use App\Models\About;
@@ -13,6 +15,7 @@ use App\Models\Service;
 use App\Models\Testimonial;
 use App\Models\Blog;
 use App\Models\Setting;
+use App\Models\Category;
 
 class AdminController extends Controller
 {
@@ -23,7 +26,7 @@ class AdminController extends Controller
     {
         return view('admin.login');
     }
-
+    
     /**
      * Handle admin login request.
      */
@@ -61,6 +64,7 @@ class AdminController extends Controller
             'testimonials' => Testimonial::count(),
             'blogs' => Blog::count(),
             'settings' => Setting::distinct('group')->count('group'), // Count distinct setting groups
+            'categories' => Category::count(),
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -79,4 +83,3 @@ class AdminController extends Controller
         return redirect()->route('admin.login');
     }
 }
-

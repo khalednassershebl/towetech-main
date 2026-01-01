@@ -33,11 +33,17 @@ class PartnerController extends Controller
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
         ]);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('partners', 'public');
+            try {
+                $validated['logo'] = $request->file('logo')->store('partners', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['logo' => 'حدث خطأ أثناء رفع الشعار: ' . $e->getMessage()]);
+            }
         }
 
         Partner::create($validated);
@@ -72,7 +78,7 @@ class PartnerController extends Controller
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'delete_image' => 'nullable|boolean',
         ]);
 
@@ -83,11 +89,17 @@ class PartnerController extends Controller
             }
             $validated['logo'] = null;
         } elseif ($request->hasFile('logo')) {
-            // Delete old image if exists
-            if ($partner->logo) {
-                Storage::disk('public')->delete($partner->logo);
+            try {
+                // Delete old image if exists
+                if ($partner->logo) {
+                    Storage::disk('public')->delete($partner->logo);
+                }
+                $validated['logo'] = $request->file('logo')->store('partners', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['logo' => 'حدث خطأ أثناء رفع الشعار: ' . $e->getMessage()]);
             }
-            $validated['logo'] = $request->file('logo')->store('partners', 'public');
         } else {
             // Keep existing image
             $validated['logo'] = $partner->logo;

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CategoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +30,7 @@ Route::get('/', function () {
     // Set locale from session or default to 'ar'
     $locale = session('locale', 'ar');
     app()->setLocale($locale);
-    
+
     $sliders = \App\Models\Slider::latest()->get();
     $partners = \App\Models\Partner::latest()->get();
     $about = \App\Models\About::first(); // Get the first about record
@@ -38,7 +41,7 @@ Route::get('/', function () {
     $testimonialsHeader = \App\Models\IndexSectionHeader::where('section_type', 'testimonials')->where('is_active', true)->first(); // Get the first active testimonials section header
     $blogs = \App\Models\Blog::where('is_active', true)->orderBy('order')->orderBy('published_at', 'desc')->limit(3)->get();
     $blogHeader = \App\Models\IndexSectionHeader::where('section_type', 'blog')->where('is_active', true)->first(); // Get the first active blog section header
-    
+
     // Get settings
     $settings = [
         'navbar_logo' => \App\Models\Setting::getValue('navbar_logo'),
@@ -69,9 +72,9 @@ Route::get('/', function () {
         'seo_meta_keywords_ar' => \App\Models\Setting::getValue('seo_meta_keywords_ar'),
         'seo_meta_keywords_en' => \App\Models\Setting::getValue('seo_meta_keywords_en'),
     ];
-    
+
     return view('welcome', compact('sliders', 'partners', 'about', 'heroSlides', 'services', 'servicesHeader', 'testimonials', 'testimonialsHeader', 'blogs', 'blogHeader', 'settings', 'locale'));
-});
+})->name('home');
 
 // Admin Routes
 Route::prefix('admin')->group(function () {
@@ -96,3 +99,35 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
+
+Route::get('/admin/items/create', [ItemController::class, 'create'])->name('admin.items.create');
+
+Route::middleware('auth')->group(function () {
+    // إدارة الأقسام
+    Route::get('/admin/categories', [CategoryController::class, 'adminIndex'])->name('admin.categories.index');
+    Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/admin/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/admin/categories/{id}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/admin/categories/{id}', [CategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
+    // حفظ المنتج (POST)
+    Route::post('/admin/items', [ItemController::class, 'store'])->name('admin.items.store');
+
+    Route::get('/admin/items/{id}/edit', [ItemController::class, 'edit'])->name('admin.items.edit');
+
+    Route::put('/admin/items/{id}', [ItemController::class, 'update'])->name('admin.items.update');
+
+    Route::delete('/admin/items/{id}', [ItemController::class, 'destroy'])->name('admin.items.destroy');
+
+    // عرض قائمة المنتجات
+    Route::get('/admin/items', [ItemController::class, 'show'])->name('admin.items.show');
+});
+
+
+Route::get('/category/{slug}', [ItemController::class, 'view'])
+    ->name('categories.show');
+
+
+Route::get('/categories', [CategoryController::class, 'index'])
+    ->name('categories.index');

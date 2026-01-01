@@ -35,7 +35,7 @@ class TestimonialController extends Controller
             'name_en' => 'required|string|max:255',
             'position_ar' => 'required|string|max:255',
             'position_en' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'rating' => 'required|integer|min:1|max:5',
             'review_ar' => 'required|string',
             'review_en' => 'required|string',
@@ -44,7 +44,13 @@ class TestimonialController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            try {
+                $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
+            }
         }
 
         $validated['is_active'] = $request->has('is_active') ? true : false;
@@ -84,7 +90,7 @@ class TestimonialController extends Controller
             'name_en' => 'required|string|max:255',
             'position_ar' => 'required|string|max:255',
             'position_en' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'rating' => 'required|integer|min:1|max:5',
             'review_ar' => 'required|string',
             'review_en' => 'required|string',
@@ -100,11 +106,17 @@ class TestimonialController extends Controller
             }
             $validated['image'] = null;
         } elseif ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($testimonial->image) {
-                Storage::disk('public')->delete($testimonial->image);
+            try {
+                // Delete old image if exists
+                if ($testimonial->image) {
+                    Storage::disk('public')->delete($testimonial->image);
+                }
+                $validated['image'] = $request->file('image')->store('testimonials', 'public');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'حدث خطأ أثناء رفع الصورة: ' . $e->getMessage()]);
             }
-            $validated['image'] = $request->file('image')->store('testimonials', 'public');
         } else {
             // Keep existing image
             $validated['image'] = $testimonial->image;

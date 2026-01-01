@@ -328,7 +328,7 @@
             <div class="form-group">
                 <label for="background">صورة الخلفية</label>
                 <input type="file" id="background" name="background" accept="image/*" onchange="previewImage(this)">
-                <small>الصيغ المدعومة: JPEG, PNG, JPG, GIF (الحد الأقصى: 2MB)</small>
+                <small>الصيغ المدعومة: JPEG, PNG, JPG, GIF, WEBP (الحد الأقصى: 20MB)</small>
                 @error('background')
                     <div class="error-message">{{ $message }}</div>
                 @enderror

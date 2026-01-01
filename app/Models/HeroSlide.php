@@ -24,5 +24,25 @@ class HeroSlide extends Model
         'is_active' => 'boolean',
         'order' => 'integer',
     ];
+
+    /**
+     * Get the background image URL
+     */
+    public function getBackgroundImageUrlAttribute()
+    {
+        if (!$this->background_image) {
+            return null;
+        }
+
+        if (filter_var($this->background_image, FILTER_VALIDATE_URL)) {
+            return $this->background_image;
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->background_image)) {
+            return asset('storage/' . ltrim($this->background_image, '/'));
+        }
+
+        return null;
+    }
 }
 

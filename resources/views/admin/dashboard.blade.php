@@ -324,6 +324,24 @@
             </div>
         </a>
 
+        <!-- Categories Card -->
+        <a href="{{ route('admin.categories.index') }}" class="dashboard-card" style="text-decoration: none; color: inherit;">
+            <div class="dashboard-card-header">
+                <h3 class="dashboard-card-title">الأقسام</h3>
+                <div class="dashboard-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3C2.44772 3 2 3.44772 2 4V20C2 20.5523 2.44772 21 3 21H21C21.5523 21 22 20.5523 22 20V4C22 3.44772 21.5523 3 21 3H3ZM4 5H20V19H4V5ZM6 7V9H18V7H6ZM6 11V13H18V11H6ZM6 15V17H14V15H6Z"></path></svg></div>
+            </div>
+            <div class="dashboard-card-value">{{ $stats['categories'] }}</div>
+            <div class="dashboard-card-label-link-container">
+                <div class="dashboard-card-label">عدد الأقسام</div>
+                <div class="dashboard-card-link">
+                    عرض الكل
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"/>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
         <!-- Settings Card -->
         <a href="{{ route('settings.index') }}" class="dashboard-card" style="text-decoration: none; color: inherit;">
             <div class="dashboard-card-header">
